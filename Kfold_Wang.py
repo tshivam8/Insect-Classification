@@ -27,7 +27,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.naive_bayes import GaussianNB, MultinomialNB
 from sklearn.neural_network import MLPClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as LDA
-#from matplotlib import pyplot as plt
+
 pd.options.mode.chained_assignment = None
 
 
@@ -50,14 +50,14 @@ class Model:
                  df['Class'][ind]=4.0
              elif(df['Class'][ind]=='Lepidoptera'):
                  df['Class'][ind]=5.0
-             elif(df['Class'][ind]=='Megalptera'):
-                 df['Class'][ind]=6.0
-             elif(df['Class'][ind]=='Neuroptera'):
-                 df['Class'][ind]=7.0
-             elif(df['Class'][ind]=='Odonata'):
-                 df['Class'][ind]=8.0
-             elif(df['Class'][ind]=='Orthoptera'):
-                 df['Class'][ind]=9.0
+            #  elif(df['Class'][ind]=='Megalptera'):
+            #      df['Class'][ind]=6.0
+            #  elif(df['Class'][ind]=='Neuroptera'):
+            #      df['Class'][ind]=7.0
+            #  elif(df['Class'][ind]=='Odonata'):
+            #      df['Class'][ind]=8.0
+            #  elif(df['Class'][ind]=='Orthoptera'):
+            #      df['Class'][ind]=9.0
              else:
                  df['Class'][ind]=0.0
          #print(df.loc[df['Class'] == 1.0])
@@ -168,12 +168,30 @@ class Classification:
         #X = scaler.fit_transform(dataset[:,:-1]) 
         y = dataset[:,-1:].ravel()
         print(y)
-        acc = []
+        nb_a = []
+        svm_a = []
+        knn_a = []
+        rf_a = []
+        ann_a = []
+        lda_a = []
+
         for train_index, test_index in kf.split(X):
             X_train, X_test = X[train_index], X[test_index]
             y_train, y_test = np.uint8(y[train_index]), np.uint8(y[test_index])
-            acc.append(self.nb(X_train,y_train,X_test,y_test))
-        print('accuracy for kfold is',mean(acc))
+            
+            nb_a.append(self.nb(X_train,y_train,X_test,y_test))
+            svm_a.append(self.svm(X_train,y_train,X_test,y_test))
+            knn_a.append(self.knn(X_train,y_train,X_test,y_test))
+            rf_a.append(self.rf(X_train,y_train,X_test,y_test))
+            ann_a.append(self.ann(X_train,y_train,X_test,y_test))
+            lda_a.append(self.lda(X_train,y_train,X_test,y_test))
+        
+        print('accuracy for kfold-nb is',mean(nb_a))
+        print('accuracy for kfold-svm is',mean(svm_a))
+        print('accuracy for kfold-knn is',mean(knn_a))
+        print('accuracy for kfold-rf is',mean(rf_a))
+        print('accuracy for kfold-ann is',mean(ann_a))
+        print('accuracy for kfold-lda is',mean(lda_a))
 
     def knn(self, X_train=None, y_train=None, X_test=None, y_test=None):
         clf = neighbors.KNeighborsClassifier(n_neighbors = 3)

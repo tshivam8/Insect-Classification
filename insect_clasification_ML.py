@@ -193,22 +193,22 @@ class Model:
                  df['Class'][ind]=15.0
              elif(df['Class'][ind]=='Mythimna separta'):
                  df['Class'][ind]=16.0
-             elif(df['Class'][ind]=='Eurydema dominulus'):
-                 df['Class'][ind]=17.0
-             elif(df['Class'][ind]=='Pieris rapae'):
-                 df['Class'][ind]=18.0
-             elif(df['Class'][ind]=='Eurydema gebleri'):
-                 df['Class'][ind]=19.0
-             elif(df['Class'][ind]=='Erthesina fullo'):
-                 df['Class'][ind]=20.0
-             elif(df['Class'][ind]=='Eysacoris guttiger'):
-                 df['Class'][ind]=21.0
-             elif(df['Class'][ind]=='Pentfaleus major'):
-                 df['Class'][ind]=22.0
-             elif(df['Class'][ind]=='Sitobion avenae'):
-                 df['Class'][ind]=23.0
-             elif(df['Class'][ind]=='Nephotettix bipunctatus'):
-                 df['Class'][ind]=24.0
+            #  elif(df['Class'][ind]=='Eurydema dominulus'):
+            #      df['Class'][ind]=17.0
+            #  elif(df['Class'][ind]=='Pieris rapae'):
+            #      df['Class'][ind]=18.0
+            #  elif(df['Class'][ind]=='Eurydema gebleri'):
+            #      df['Class'][ind]=19.0
+            #  elif(df['Class'][ind]=='Erthesina fullo'):
+            #      df['Class'][ind]=20.0
+            #  elif(df['Class'][ind]=='Eysacoris guttiger'):
+            #      df['Class'][ind]=21.0
+            #  elif(df['Class'][ind]=='Pentfaleus major'):
+            #      df['Class'][ind]=22.0
+            #  elif(df['Class'][ind]=='Sitobion avenae'):
+            #      df['Class'][ind]=23.0
+            #  elif(df['Class'][ind]=='Nephotettix bipunctatus'):
+            #      df['Class'][ind]=24.0
              else:
                  df['Class'][ind]=0.0
          #print(df.loc[df['Class'] == 1.0])
