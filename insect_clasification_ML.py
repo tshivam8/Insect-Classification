@@ -169,30 +169,30 @@ class Model:
                  df['Class'][ind]=4.0
              elif(df['Class'][ind]=='Cifuna locuples'):
                  df['Class'][ind]=5.0
-             elif(df['Class'][ind]=='Cletus punctiger'):
-                 df['Class'][ind]=6.0
-             elif(df['Class'][ind]=='Cnaphalocrocis medinalis'):
-                 df['Class'][ind]=7.0
-             elif(df['Class'][ind]=='Colaphellus bowvingi'):
-                 df['Class'][ind]=8.0
-             elif(df['Class'][ind]=='Colposcelis signata'):
-                 df['Class'][ind]=9.0
-             elif(df['Class'][ind]=='Dolerus tritici'):
-                 df['Class'][ind]=10.0
+            #  elif(df['Class'][ind]=='Cletus punctiger'):
+            #      df['Class'][ind]=6.0
+            #  elif(df['Class'][ind]=='Cnaphalocrocis medinalis'):
+            #      df['Class'][ind]=7.0
+            #  elif(df['Class'][ind]=='Colaphellus bowvingi'):
+            #      df['Class'][ind]=8.0
+            #  elif(df['Class'][ind]=='Colposcelis signata'):
+            #      df['Class'][ind]=9.0
+            #  elif(df['Class'][ind]=='Dolerus tritici'):
+            #      df['Class'][ind]=10.0
 
-             elif(df['Class'][ind]=='Tettigella viridis'):
-                 df['Class'][ind]=11.0
+            #  elif(df['Class'][ind]=='Tettigella viridis'):
+            #      df['Class'][ind]=11.0
 
-             elif(df['Class'][ind]=='Maruca testulalis'):
-                 df['Class'][ind]=12.0
-             elif(df['Class'][ind]=='Sympiezomias velatus'):
-                 df['Class'][ind]=13.0
-             elif(df['Class'][ind]=='Sogatella furcifera'):
-                 df['Class'][ind]=14.0
-             elif(df['Class'][ind]=='Laodelphax striatellua'):
-                 df['Class'][ind]=15.0
-             elif(df['Class'][ind]=='Mythimna separta'):
-                 df['Class'][ind]=16.0
+            #  elif(df['Class'][ind]=='Maruca testulalis'):
+            #      df['Class'][ind]=12.0
+            #  elif(df['Class'][ind]=='Sympiezomias velatus'):
+            #      df['Class'][ind]=13.0
+            #  elif(df['Class'][ind]=='Sogatella furcifera'):
+            #      df['Class'][ind]=14.0
+            #  elif(df['Class'][ind]=='Laodelphax striatellua'):
+            #      df['Class'][ind]=15.0
+            #  elif(df['Class'][ind]=='Mythimna separta'):
+            #      df['Class'][ind]=16.0
             #  elif(df['Class'][ind]=='Eurydema dominulus'):
             #      df['Class'][ind]=17.0
             #  elif(df['Class'][ind]=='Pieris rapae'):

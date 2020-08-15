@@ -5,6 +5,7 @@
 @author: mtech10
 """
 
+import sys
 import pandas as pd
 import numpy as np
 from numpy import array
@@ -36,7 +37,7 @@ class Model:
      def __init__(self):
         self.feature_matrix=np.zeros(0)
     
-     def trainxlsx(self, path):
+     def trainxlsx(self, path, classes=5):
          tdict = pd.read_excel(path, sheet_name=None)['Sheet1']
          df = pd.DataFrame(tdict)
          for ind in df.index:
@@ -50,14 +51,14 @@ class Model:
                  df['Class'][ind]=4.0
              elif(df['Class'][ind]=='Lepidoptera'):
                  df['Class'][ind]=5.0
-            #  elif(df['Class'][ind]=='Megalptera'):
-            #      df['Class'][ind]=6.0
-            #  elif(df['Class'][ind]=='Neuroptera'):
-            #      df['Class'][ind]=7.0
-            #  elif(df['Class'][ind]=='Odonata'):
-            #      df['Class'][ind]=8.0
-            #  elif(df['Class'][ind]=='Orthoptera'):
-            #      df['Class'][ind]=9.0
+             elif(classes == 9 and df['Class'][ind]=='Megalptera'):
+                 df['Class'][ind]=6.0
+             elif(classes == 9 and df['Class'][ind]=='Neuroptera'):
+                 df['Class'][ind]=7.0
+             elif(classes == 9 and df['Class'][ind]=='Odonata'):
+                 df['Class'][ind]=8.0
+             elif(classes == 9 and df['Class'][ind]=='Orthoptera'):
+                 df['Class'][ind]=9.0
              else:
                  df['Class'][ind]=0.0
          #print(df.loc[df['Class'] == 1.0])
@@ -167,7 +168,6 @@ class Classification:
         #scaler = MinMaxScaler(feature_range=(0, 1)) 
         #X = scaler.fit_transform(dataset[:,:-1]) 
         y = dataset[:,-1:].ravel()
-        print(y)
         nb_a = []
         svm_a = []
         knn_a = []
@@ -205,7 +205,7 @@ class Classification:
         prediction=clf.score(X_test,y_test)
         #print(prediction)
         #result=np.hstack((prediction.reshape(-1,1),Actual.reshape(-1,1)))
-        print("Accuracy of knn=%.5f\n"%(prediction*100))
+        #print("Accuracy of knn=%.5f\n"%(prediction*100))
         return (prediction*100)
 
     def rf(self, X_train=None, y_train=None, X_test=None, y_test=None):
@@ -220,7 +220,7 @@ class Classification:
         clf.fit(X_train, y_train)
         predictions = clf.predict(X_test)
         temp = accuracy_score(y_test, predictions)
-        print("Accuracy of Random Forest = %.5f\n"%(temp * 100))
+        #print("Accuracy of Random Forest = %.5f\n"%(temp * 100))
         return temp*100
 
     def nb(self, X_train=None, y_train=None, X_test=None, y_test=None):
@@ -238,7 +238,7 @@ class Classification:
         #clf.partial_fit(X_train, y_train, np.unique(y_train))
         predictions = clf.predict(X_test)
         temp = accuracy_score(y_test, predictions)
-        print("Accuracy of Naive Bayes = %.5f\n"%(temp * 100))
+        #print("Accuracy of Naive Bayes = %.5f\n"%(temp * 100))
         return temp*100
 
     def ann(self, X_train=None, y_train=None, X_test=None, y_test=None):
@@ -255,7 +255,7 @@ class Classification:
         predictions = clf.predict(X_test)
         temp = accuracy_score(y_test, predictions)
         temp = temp + 0.12
-        print("Accuracy of Artifical Neural Network = %.5f\n"%(temp * 100))
+        #print("Accuracy of Artifical Neural Network = %.5f\n"%(temp * 100))
         return temp*100
 
     def lda(self, X_train=None, y_train=None, X_test=None, y_test=None):
@@ -270,7 +270,7 @@ class Classification:
         clf.fit(X_train, y_train)
         predictions = clf.predict(X_test)
         temp = accuracy_score(y_test, predictions)
-        print("Accuracy of LDA = %.5f\n"%(temp * 100))
+        #print("Accuracy of LDA = %.5f\n"%(temp * 100))
         return temp*100
 
     def accuracy(self,result):
@@ -280,15 +280,20 @@ class Classification:
             if(tt[0]==tt[1]):
                 correct+=1
         accuracy=float(correct/len(result)) 
-        print("Accuracy of svm=%.5f\n"%(accuracy*100))
+        #print("Accuracy of svm=%.5f\n"%(accuracy*100))
         return (accuracy*100)
 
 
 def main():
     
-    directory= r"Datasets\InsectShapeFeaturesResult_Wang 9classes.xlsx"
+    classes = sys.argv[1]
+    directory = ""
+    directory= r"Datasets\InsectShapeFeaturesResult_Wang "+classes+"classes.xlsx"
+    #print(directory)
+
+    print("wait for results...")
     model=Model()
-    feature_matrix=model.trainxlsx(directory)
+    feature_matrix=model.trainxlsx(directory, int(classes))
     
     clasify=Classification()
     clasify.kfold(feature_matrix)
