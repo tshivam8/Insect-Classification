@@ -155,63 +155,68 @@ class Model:
      def __init__(self):
         self.feature_matrix=np.zeros(0)
     
-     def trainxlsx(self, path):
+     def trainxlsx(self, path, classes=5):
          tdict = pd.read_excel(path, sheet_name=None)['Sheet1']
          df = pd.DataFrame(tdict)
          for ind in df.index:
-             if(df['Class'][ind]=='Aelia sibirica'):
+             if(df['Class'][ind]=='Cifuna locuples'):
                  df['Class'][ind]=1.0
-             elif(df['Class'][ind]=='Atractomorpha sinensis'):
+             elif(df['Class'][ind]=='Tettigella viridis'):
                  df['Class'][ind]=2.0
-             elif(df['Class'][ind]=='Chilo suppressalis'):
+             elif(df['Class'][ind]=='Colposcelis signata'):
                  df['Class'][ind]=3.0
-             elif(df['Class'][ind]=='Chromatomyia horticola'):
+             elif(df['Class'][ind]=='Maruca testulalis'):
                  df['Class'][ind]=4.0
-             elif(df['Class'][ind]=='Cifuna locuples'):
+             elif(df['Class'][ind]=='Atractomorpha sinensis'):
                  df['Class'][ind]=5.0
-            #  elif(df['Class'][ind]=='Cletus punctiger'):
-            #      df['Class'][ind]=6.0
-            #  elif(df['Class'][ind]=='Cnaphalocrocis medinalis'):
-            #      df['Class'][ind]=7.0
-            #  elif(df['Class'][ind]=='Colaphellus bowvingi'):
-            #      df['Class'][ind]=8.0
-            #  elif(df['Class'][ind]=='Colposcelis signata'):
-            #      df['Class'][ind]=9.0
-            #  elif(df['Class'][ind]=='Dolerus tritici'):
-            #      df['Class'][ind]=10.0
 
-            #  elif(df['Class'][ind]=='Tettigella viridis'):
-            #      df['Class'][ind]=11.0
+             elif(classes >= 6 and df['Class'][ind]=='Sympiezomias velatus'):
+                 df['Class'][ind]=6.0
+             elif(classes >=7 and df['Class'][ind]=='Sogatella furcifera'):
+                 df['Class'][ind]=7.0
+             elif(classes >=8 and df['Class'][ind]=='Cletus punctiger'):
+                 df['Class'][ind]=8.0
+             elif(classes >=9 and df['Class'][ind]=='Cnaphalocrocis medinalis'):
+                 df['Class'][ind]=9.0
+             elif(classes >= 10 and df['Class'][ind]=='Laodelphax striatellua'):
+                 df['Class'][ind]=10.0
 
-            #  elif(df['Class'][ind]=='Maruca testulalis'):
-            #      df['Class'][ind]=12.0
-            #  elif(df['Class'][ind]=='Sympiezomias velatus'):
-            #      df['Class'][ind]=13.0
-            #  elif(df['Class'][ind]=='Sogatella furcifera'):
-            #      df['Class'][ind]=14.0
-            #  elif(df['Class'][ind]=='Laodelphax striatellua'):
-            #      df['Class'][ind]=15.0
-            #  elif(df['Class'][ind]=='Mythimna separta'):
-            #      df['Class'][ind]=16.0
-            #  elif(df['Class'][ind]=='Eurydema dominulus'):
-            #      df['Class'][ind]=17.0
-            #  elif(df['Class'][ind]=='Pieris rapae'):
-            #      df['Class'][ind]=18.0
-            #  elif(df['Class'][ind]=='Eurydema gebleri'):
-            #      df['Class'][ind]=19.0
-            #  elif(df['Class'][ind]=='Erthesina fullo'):
-            #      df['Class'][ind]=20.0
-            #  elif(df['Class'][ind]=='Eysacoris guttiger'):
-            #      df['Class'][ind]=21.0
-            #  elif(df['Class'][ind]=='Pentfaleus major'):
-            #      df['Class'][ind]=22.0
-            #  elif(df['Class'][ind]=='Sitobion avenae'):
-            #      df['Class'][ind]=23.0
-            #  elif(df['Class'][ind]=='Nephotettix bipunctatus'):
-            #      df['Class'][ind]=24.0
+             elif(classes >= 11 and df['Class'][ind]=='Chilo suppressalis'):
+                 df['Class'][ind]=11.0
+             elif(classes >= 12 and df['Class'][ind]=='Mythimna separta'):
+                 df['Class'][ind]=12.0
+             elif(classes >= 13 and df['Class'][ind]=='Eurydema dominulus'):
+                 df['Class'][ind]=13.0
+             elif(classes >= 14 and df['Class'][ind]=='Colaphellus bowvingi'):
+                 df['Class'][ind]=14.0
+             elif(classes >= 15 and df['Class'][ind]=='Pieris rapae'):
+                 df['Class'][ind]=15.0
+             elif(classes >= 16 and df['Class'][ind]=='Eurydema gebleri'):
+                 df['Class'][ind]=16.0
+
+             elif(classes >= 17 and df['Class'][ind]=='Erthesina fullo'):
+                 df['Class'][ind]=17.0
+             elif(classes >= 18 and df['Class'][ind]=='Chromatomyia horticola'):
+                 df['Class'][ind]=18.0
+             elif(classes >= 19 and df['Class'][ind]=='Eysacoris guttiger'):
+                 df['Class'][ind]=19.0
+             elif(classes >= 20 and df['Class'][ind]=='Dolerus tritici'):
+                 df['Class'][ind]=20.0
+             elif(classes >= 21 and df['Class'][ind]=='Pentfaleus major'):
+                 df['Class'][ind]=21.0
+             elif(classes >= 22 and df['Class'][ind]=='Sitobion avenae'):
+                 df['Class'][ind]=22.0
+             elif(classes >= 23 and df['Class'][ind]=='Aelia sibirica'):
+                 df['Class'][ind]=23.0
+             elif(classes >= 24 and df['Class'][ind]=='Nephotettix bipunctatus'):
+                 df['Class'][ind]=24.0
              else:
                  df['Class'][ind]=0.0
          #print(df.loc[df['Class'] == 1.0])
+
+         df = df[df['Class'] != 0.0]
+
+         #print('----------------------------------------',df['Class'].unique())
          self.feature_matrix = df.values
          return self.feature_matrix
 
@@ -294,12 +299,25 @@ class Classification:
         # self.Test=preprocessing.scale(feature_matrix2[:,:-1])
         # self.Actual=np.uint8(feature_matrix2[:,-1:]).ravel()
 
-        scaler = MinMaxScaler(feature_range=(0, 1)) 
-        self.Train = scaler.fit_transform(feature_matrix1[:,:-1]) 
-        self.Target=np.uint8(feature_matrix1[:,-1:]).ravel()
+        dataset = np.vstack((feature_matrix1, feature_matrix2))
+        X_train, X_test, y_train, y_test = train_test_split(dataset[:,:-1], dataset[:,-1:], test_size=0.30, random_state=42)
 
-        self.Test= scaler.fit_transform(feature_matrix2[:,:-1])
-        self.Actual=np.uint8(feature_matrix2[:,-1:]).ravel()
+        scaler = MinMaxScaler(feature_range=(0, 1))
+        self.Train = scaler.fit_transform(X_train) 
+        self.Target=np.uint8(y_train).ravel()
+
+        self.Test= scaler.fit_transform(X_test)
+        self.Actual=np.uint8(y_test).ravel()
+
+
+        # scaler = MinMaxScaler(feature_range=(0, 1))
+        # self.Train = scaler.fit_transform(feature_matrix1[:,:-1]) 
+        # self.Target=np.uint8(feature_matrix1[:,-1:]).ravel()
+
+        # self.Test= scaler.fit_transform(feature_matrix2[:,:-1])
+        # self.Actual=np.uint8(feature_matrix2[:,-1:]).ravel()
+
+        #print(len(self.Train),len(self.Test),'----')
 
     def svm(self, X_train=None, y_train=None, X_test=None, y_test=None):
         clf = SVC(kernel='rbf', C=10, gamma=100)
@@ -358,8 +376,8 @@ class Classification:
         print("Accuracy of Random Forest = %.5f\n"%(temp * 100))
 
     def nb(self, X_train=None, y_train=None, X_test=None, y_test=None):
-        #clf = GaussianNB()
-        clf = MultinomialNB()
+        clf = GaussianNB()
+        #clf = MultinomialNB()
         if X_train is None:
             X_train=self.Train
             y_train=self.Target
@@ -411,6 +429,7 @@ class Classification:
         print("Accuracy of svm=%.5f\n"%(accuracy*100))
         return (accuracy*100)
 
+import sys
 
 def main():
     #train="F:/THENMOZHI/Dakshayani_M.Tech/ML_Lab_insect classification/Data/TRAIN_"
@@ -424,9 +443,17 @@ def main():
     
     train= r"Datasets\Xie24 insect dataset\Shape features\InsectShapeFeaturesResult_Xie 24classes TRAIN.xlsx"
     test=  r"Datasets\Xie24 insect dataset\Shape features\InsectShapeFeaturesResult_Xie 24classes TEST.xlsx"
+    
     model=Model()
-    feature_matrix1=model.trainxlsx(train)
-    feature_matrix2=model.trainxlsx(test)
+
+    try:
+        classes = int(sys.argv[1])
+    except:
+        classes = 5
+
+    feature_matrix1=model.trainxlsx(train, classes)
+    feature_matrix2=model.trainxlsx(test, classes)
+    
     
     clasify=Classification(feature_matrix1,feature_matrix2)
     

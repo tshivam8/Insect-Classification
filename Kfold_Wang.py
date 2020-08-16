@@ -61,89 +61,16 @@ class Model:
                  df['Class'][ind]=9.0
              else:
                  df['Class'][ind]=0.0
-         #print(df.loc[df['Class'] == 1.0])
+         #print(df.loc[df['Class'] == 1.0])4
+         #df = df[df['Class'] != 0.0]
+         #print('-------------------',df['Class'].unique())
          self.feature_matrix = df.values
          return self.feature_matrix
-
-    
-
-
-     def train(self,path):
-        ImageObj=Image()
-        FeatObj=Features()
-        train_dir = [os.path.join(path,f) for f in os.listdir(path)]
-        
-        out=0
-        for t in train_dir:
-            files = [os.path.join(t,f) for f in os.listdir(t)]
-            for fi in files:
-                label=os.path.basename(os.path.dirname(fi))
-                #print(fi)
-                img=ImageObj.LoadImage(fi)
-                #ImageObj.showimage(img)
-                res2=ImageObj.kmeans(2,img)
-                #ImageObj.showimage(res2)
-                
-                index,maxcnt,cnts=FeatObj.shapeextract(res2)
-                #FeatObj.drawcontour(index,maxcnt,cnts)
-                #print(fi)
-                if(maxcnt==0):
-                    #print("deleted:%s"%label)
-                    continue
-                    
-                coordinates=FeatObj.centroiddistance(cnts,index)
-                shapefeatures=FeatObj.dft(coordinates)
-                colorfeature=FeatObj.colourhistogram(img)
-                texturefeature=FeatObj.extract_texture(res2)
-                features=np.hstack((shapefeatures,colorfeature,texturefeature,out))
-                #features=np.hstack((shapefeatures,colorfeature,out))
-                """
-                1.Cifuna locuples
-                2.Tettigella viridis
-                3.Colposcelis signata
-                4.Maruca testulalis
-                5.Atractomorpha sinensis
-                """
-                if(label=='23_Aelia sibirica'):
-                    out=1.0
-                elif(label=='5_Atractomorpha sinensis'):
-                    out=2.0
-                elif(label=='11_Chilo suppressalis'):
-                    out=3.0
-                elif(label=='18_Chromatomyia horticola'):
-                    out=4.0
-                elif(label=='1-Cifuna locuples'):
-                    out=5.0
-                elif(label=='8_Cletus punctiger'):
-                    out=6.0
-                elif(label=='9_Cnaphalocrocis medinalis'):
-                    out=7.0
-                elif(label=='14_Colaphellus bowvingi'):
-                    out=8.0
-                elif(label=='3_Colposcelis signata'):
-                    out=9.0
-                elif(label=='20_Dolerus tritici'):
-                    out=10.0
-                   
-                features[-1] = out
-                if self.feature_matrix.size==0:
-                        self.feature_matrix=np.append(self.feature_matrix,features)
-                else:
-                        self.feature_matrix=np.vstack([self.feature_matrix,features])
-        
-        return self.feature_matrix
        
                      
         
         
 class Classification:
-    def __init__(self):
-        pass
-        # self.Train=preprocessing.scale(feature_matrix1[:,:-1])
-        # self.Target=np.uint8(feature_matrix1[:,-1:]).ravel()
-        # #print(Target)
-        # self.Test=preprocessing.scale(feature_matrix2[:,:-1])
-        # self.Actual=np.uint8(feature_matrix2[:,-1:]).ravel()
 
     def svm(self, X_train=None, y_train=None, X_test=None, y_test=None):
         #clf = SVC(kernel='rbf', random_state=0, gamma=.01, C=1) : 54%
@@ -162,7 +89,7 @@ class Classification:
         result=np.hstack((prediction.reshape(-1,1),y_test.reshape(-1,1)))
         return self.accuracy(result)
 
-    def kfold(self,dataset,k=10):
+    def kfold(self,dataset,k=4):
         kf = KFold(n_splits=k,shuffle=True, random_state=1)
         X = preprocessing.scale(dataset[:,:-1])
         #scaler = MinMaxScaler(feature_range=(0, 1)) 
@@ -178,7 +105,7 @@ class Classification:
         for train_index, test_index in kf.split(X):
             X_train, X_test = X[train_index], X[test_index]
             y_train, y_test = np.uint8(y[train_index]), np.uint8(y[test_index])
-            
+            #print(len(X_train),len(X_test),'\n')
             nb_a.append(self.nb(X_train,y_train,X_test,y_test))
             svm_a.append(self.svm(X_train,y_train,X_test,y_test))
             knn_a.append(self.knn(X_train,y_train,X_test,y_test))
@@ -186,12 +113,12 @@ class Classification:
             ann_a.append(self.ann(X_train,y_train,X_test,y_test))
             lda_a.append(self.lda(X_train,y_train,X_test,y_test))
         
-        print('accuracy for kfold-nb is',mean(nb_a))
-        print('accuracy for kfold-svm is',mean(svm_a))
-        print('accuracy for kfold-knn is',mean(knn_a))
-        print('accuracy for kfold-rf is',mean(rf_a))
-        print('accuracy for kfold-ann is',mean(ann_a))
-        print('accuracy for kfold-lda is',mean(lda_a))
+        print('accuracy for kfold-svm is %.5f'%mean(svm_a))
+        print('accuracy for kfold-knn is %.5f'%mean(knn_a))
+        print('accuracy for kfold-rf is %.5f'%mean(rf_a))
+        print('accuracy for kfold-nb is %.5f'%mean(nb_a))
+        print('accuracy for kfold-ann is %.5f'%mean(ann_a))
+        print('accuracy for kfold-lda is %.5f'%mean(lda_a))
 
     def knn(self, X_train=None, y_train=None, X_test=None, y_test=None):
         clf = neighbors.KNeighborsClassifier(n_neighbors = 3)
@@ -286,11 +213,12 @@ class Classification:
 
 def main():
     
-    classes = sys.argv[1]
+    try:
+        classes = sys.argv[1]
+    except:
+        classes = 5
     directory = ""
-    directory= r"Datasets\InsectShapeFeaturesResult_Wang "+classes+"classes.xlsx"
-    #print(directory)
-
+    directory= r"Datasets\InsectShapeFeaturesResult_Wang 9classes.xlsx"
     print("wait for results...")
     model=Model()
     feature_matrix=model.trainxlsx(directory, int(classes))
